@@ -5,26 +5,29 @@ using Caliburn.Micro;
 using MediatR;
 
 namespace Assignment.UI;
+
 internal class TodoManagmentViewModel : Screen
 {
     private readonly ISender _sender;
     private readonly IWindowManager _windowManager;
 
-    private IList<TodoListDto> todoLists;
+    private IList<TodoListDto> _todoLists;
+
     public IList<TodoListDto> TodoLists
     {
         get
         {
-            return todoLists;
+            return _todoLists;
         }
         set
         {
-            todoLists = value;
+            _todoLists = value;
             NotifyOfPropertyChange(() => TodoLists);
         }
     }
 
     private TodoListDto _selectedTodoList;
+
     public TodoListDto SelectedTodoList
     {
         get => _selectedTodoList;
@@ -36,6 +39,7 @@ internal class TodoManagmentViewModel : Screen
     }
 
     private TodoItemDto _selectedItem;
+
     public TodoItemDto SelectedItem
     {
         get => _selectedItem;
@@ -99,5 +103,6 @@ internal class TodoManagmentViewModel : Screen
     private async void DoneTodoItem(object obj)
     {
         await _sender.Send(new DoneTodoItemCommand(SelectedItem.Id));
+        await RefereshTodoLists().ConfigureAwait(true);
     }
 }
