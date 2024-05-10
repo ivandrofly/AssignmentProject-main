@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -49,6 +50,7 @@ public static class DependencyInjection
         services.AddAuthorization(options =>
             options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
 
+        services.AddSingleton<IWeatherForecastApi, WeatherService>();
         return services;
     }
 
