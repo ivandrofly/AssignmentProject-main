@@ -6,17 +6,23 @@ using Microsoft.Extensions.DependencyInjection.Countries;
 
 namespace Assignment.UI.ViewModels;
 
+/// <summary>
+/// Represents a view model for the weather forecast.
+/// </summary>
 public class WeatherForecastViewModel : Screen
 {
     private readonly IWindowManager _windowManager;
     private readonly ISender _sender;
     private readonly IWeatherForecastApi _weatherForecastApi;
-    private IList<Country> _countries;
-    private Country _selectedCountry;
-    private City _selectedCity;
+    private IList<CountryDto> _countries;
+    private CountryDto _selectedCountry;
+    private CityDto _selectedCity;
     private int _temperatureAtGivenTime;
 
-    public IList<Country> Countries
+    /// <summary>
+    /// Represents a list of countries.
+    /// </summary>
+    public IList<CountryDto> Countries
     {
         get => _countries;
         set
@@ -31,7 +37,10 @@ public class WeatherForecastViewModel : Screen
         }
     }
 
-    public Country SelectedCountry
+    /// <summary>
+    /// Represents the selected country in the WeatherForecastViewModel.
+    /// </summary>
+    public CountryDto SelectedCountry
     {
         get => _selectedCountry;
         set
@@ -46,7 +55,10 @@ public class WeatherForecastViewModel : Screen
         }
     }
 
-    public City SelectedCity
+    /// <summary>
+    /// Represents the selected city in the WeatherForecastViewModel.
+    /// </summary>
+    public CityDto SelectedCity
     {
         get => _selectedCity;
         set
@@ -58,12 +70,27 @@ public class WeatherForecastViewModel : Screen
 
             _selectedCity = value;
             NotifyOfPropertyChange();
+        }
+    }
 
-            // fetch the data from weather-service
+    /// <summary>
+    /// Refreshes the data by retrieving the temperature for the selected city at the current time.
+    /// </summary>
+    /// <remarks>
+    /// This method makes use of the <see cref="IWeatherForecastApi"/> to get the temperature.
+    /// If a city is selected, the temperature for that city at the current time is retrieved and assigned to the <see cref="TemperatureAtGivenTime"/> property.
+    /// </remarks>
+    private void RefreshData()
+    {
+        if (SelectedCity is not null)
+        {
             TemperatureAtGivenTime = _weatherForecastApi.GetTemperature(_selectedCity.Name, DateTime.Now);
         }
     }
 
+    /// <summary>
+    /// Represents the temperature for a given time in a selected city.
+    /// </summary>
     public int TemperatureAtGivenTime
     {
         get => _temperatureAtGivenTime;
@@ -85,15 +112,14 @@ public class WeatherForecastViewModel : Screen
         _windowManager = windowManager;
         _sender = sender;
         _weatherForecastApi = weatherForecastApi;
-        // InitializeComboboxAsync();
+        InitializeComboboxAsync();
     }
 
-    public async Task InitializeComboboxAsync()
+    /// <summary>
+    /// Initializes the combobox by populating it with a list of countries.
+    /// </summary>
+    public async void InitializeComboboxAsync()
     {
-        Countries = new List<Country>()
-        {
-            new Country() { Name = "Portutgal", Cities = new List<City>() { new City() { Name = "Lisbon" } } }
-        };
-        await _sender.Send(new CountryQuery());
+        Countries = await _sender.Send(new CountryQuery());
     }
 }

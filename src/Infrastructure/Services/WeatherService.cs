@@ -6,6 +6,6 @@ public class WeatherService : IWeatherForecastApi
 {
     public int GetTemperature(string cityName, DateTime time)
     {
-        throw new NotImplementedException();
+        return Random.Shared.Next(-10, 60);
     }
 }
