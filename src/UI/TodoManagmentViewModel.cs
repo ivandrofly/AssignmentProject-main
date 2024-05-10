@@ -81,7 +81,10 @@ internal class TodoManagmentViewModel : Screen
     private async void AddTodoList(object obj)
     {
         var todoList = new TodoListViewModel(_sender);
-        await _windowManager.ShowDialogAsync(todoList);
+        if (await _windowManager.ShowDialogAsync(todoList) == true)
+        {
+            await RefereshTodoLists().ConfigureAwait(true);
+        }
     }
 
     private async void AddTodoItem(object obj)
