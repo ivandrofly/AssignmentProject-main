@@ -70,6 +70,8 @@ public class WeatherForecastViewModel : Screen
 
             _selectedCity = value;
             NotifyOfPropertyChange();
+            
+            RefreshData();
         }
     }
 
