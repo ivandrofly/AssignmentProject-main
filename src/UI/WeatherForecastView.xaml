@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:Assignment.UI.Views"
         mc:Ignorable="d"
         FontSize="18"
-        Title="WeatherForecastView" Height="450" Width="800">
+        Title="WeatherForecastView" Height="200" Width="400">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="600" />
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Orientation="Vertical" Margin="10">
             <StackPanel.Resources>
@@ -20,14 +20,23 @@
             </StackPanel.Resources>
 
             <TextBlock Text="Countries" />
-            <ComboBox ItemsSource="{Binding Countires}" SelectedItem="{Binding SelectedCountry}" />
+            <ComboBox
+                ItemsSource="{Binding DataContext.Countries, RelativeSource={RelativeSource AncestorType=Window}}"
+                DisplayMemberPath="Name"
+                SelectedItem="{Binding DataContext.SelectedCountry, RelativeSource={RelativeSource AncestorType=Window}}" />
 
             <TextBlock Text="City" />
-            <ComboBox ItemsSource="{Binding Cities}" SelectedItem="{Binding SelectedCity}" />
+            <ComboBox
+                ItemsSource="{Binding DataContext.SelectedCountry.Cities, RelativeSource={RelativeSource AncestorType=Window}}"
+                DisplayMemberPath="Name"
+                SelectedItem="{Binding SelectedCity}" />
         </StackPanel>
 
-        <ListBox Grid.Column="1" Margin="10">
-
-        </ListBox>
+        <TextBlock Grid.Column="1" Margin="10"
+                   FontSize="50"
+                   Text="{Binding DataContext.TemperatureAtGivenTime, 
+                   RelativeSource={RelativeSource AncestorType=Window}, Mode=OneWay,
+                   StringFormat={}{0:0}°C}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
     </Grid>
 </Window>
