@@ -1,5 +1,6 @@
 ﻿using Assignment.Application.Common.Interfaces;
 using Assignment.Domain.Constants;
+using Assignment.Domain.Repositories;
 using Assignment.Infrastructure.Data;
 using Assignment.Infrastructure.Data.Interceptors;
 using Assignment.Infrastructure.Identity;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Repositories;
 using Microsoft.Extensions.DependencyInjection.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -50,7 +52,14 @@ public static class DependencyInjection
         services.AddAuthorization(options =>
             options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
 
+        // web services
         services.AddSingleton<IWeatherForecastApi, WeatherService>();
+
+        // repositories
+        services.AddScoped<ICountryRepository, CountryRepository>();
+        services.AddScoped<ITodoItemsRepository, TodoItemsRepository>();
+        services.AddScoped<ITodoListsRepository, TodoListRepository>();
+        
         return services;
     }
 
